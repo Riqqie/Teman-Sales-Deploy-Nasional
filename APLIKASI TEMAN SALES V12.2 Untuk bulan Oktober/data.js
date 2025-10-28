@@ -106,12 +106,15 @@ const config = {
     ],
     discounts: {
         strataGrouping: {
-			"WAFER 500": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-			"WAFER 1K": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-			"ROLL 500": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-			"ROLL 1K": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-			"TIMEBREAK 1K": [ { minQty: 10, potongan: 4000 }, { minQty: 1, potongan: 2500 } ],
-			"TIMEBREAK 2K": [ { minQty: 10, potongan: 4000 }, { minQty: 1, potongan: 2500 } ],
+			"WAFER 500": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"WAFER 1K": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"ROLL 500": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"ROLL 1K": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"TIMEBREAK 1K": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"TIMEBREAK 2K": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"PASTA 500": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"WAFER 2K": [ { minQty: 300, potongan: 5300 }, { minQty: 100, potongan: 5000 }, { minQty: 50, potongan: 4750 }, { minQty: 25, potongan: 4250 }, { minQty: 10, potongan: 3500 },  { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"WAFER 5K": [ { minQty: 300, potongan: 7600 }, { minQty: 100, potongan: 7300 }, { minQty: 50, potongan: 7050 }, { minQty: 25, potongan: 6550 }, { minQty: 10, potongan: 5800 },  { minQty: 6, potongan: 5300 }, { minQty: 3, potongan: 5050 }, { minQty: 1, potongan: 2300 } ],
 			/*
             "WAFER FLAT": [ { minQty: 300, potongan: 5300 }, { minQty: 100, potongan: 5050 }, { minQty: 50, potongan: 4800 }, { minQty: 25, potongan: 4300 }, { minQty: 10, potongan: 3550 }, { minQty: 3, potongan: 2300 } ],
             "NEXTAR 2K": [ { minQty: 100, potongan: 3000 }, { minQty: 50, potongan: 2500 }, { minQty: 25, potongan: 2000 }, { minQty: 10, potongan: 1500 }, { minQty: 3, potongan: 1000 } ],
@@ -203,6 +206,7 @@ const config = {
     ]
 
 };
+
 
 
 
