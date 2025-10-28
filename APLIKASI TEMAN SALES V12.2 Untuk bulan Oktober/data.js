@@ -120,6 +120,9 @@ const config = {
 			"SIIP 500": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
 			"SIIP 1K": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
 			"SIIP 2K": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"NEXTAR 2K": [ { minQty: 100, potongan: 5000 }, { minQty: 50, potongan: 4750 }, { minQty: 25, potongan: 4250 }, { minQty: 10, potongan: 3500 },  { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
+			"CSD 2K 12 PCS": [ { minQty: 25, potongan: 3000 }, { minQty: 16, potongan: 2500 }, { minQty: 10, potongan: 2000 }, { minQty: 5, potongan: 1300 } ],
+			"CSD 2K 24 PCS": [ { minQty: 10, potongan: 6500 }, { minQty: 3, potongan: 5000 }, { minQty: 2, potongan: 2500 } ],
 			
 			/*
             "WAFER FLAT": [ { minQty: 300, potongan: 5300 }, { minQty: 100, potongan: 5050 }, { minQty: 50, potongan: 4800 }, { minQty: 25, potongan: 4300 }, { minQty: 10, potongan: 3550 }, { minQty: 3, potongan: 2300 } ],
@@ -151,7 +154,7 @@ const config = {
                 "tiers": [ { "minValue": 3000000, "discount": 0.03 }, { "minValue": 2000000, "discount": 0.025 }, { "minValue": 1000000, "discount": 0.015 }, { "minValue": 500000,  "discount": 0.0125 }, { "minValue": 300000,  "discount": 0.01 } ]
             }
         },
-        cod: { "minPurchase": 250000, "discount": 0.01 },
+        cod: { "minPurchase": 1000000, "discount": 0.01 },
         promoTambahan5k: {
             appliesTo: ["SKU011", "SKU012", "SKU013", "SKU014", "SKU015", "SKU035"],
             tiers: [ { minQty: 1, potongan: 2300 } ]
@@ -212,6 +215,7 @@ const config = {
     ]
 
 };
+
 
 
 
