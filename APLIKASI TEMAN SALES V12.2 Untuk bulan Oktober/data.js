@@ -94,7 +94,13 @@ const config = {
         { id: "SKU094", group: "HELLO PANDA", name: "HELLO PANDA DOUBLE", price: 99000, boxPerCarton: 12 },
         { id: "SKU095", group: "HELLO PANDA", name: "HELLO PANDA CARAMEL", price: 99000, boxPerCarton: 12 },
         { id: "SKU097", group: "SIMBA BULKY", name: "SIMBA BULKY COKELAT", price: 77000, boxPerCarton: 2 },
-        { id: "SKU098", group: "SIMBA BULKY", name: "SIMBA BULKY STRAWBERRY", price: 77000, boxPerCarton: 2 }
+        { id: "SKU098", group: "SIMBA BULKY", name: "SIMBA BULKY STRAWBERRY", price: 77000, boxPerCarton: 2 },
+		{ id: "SKU107", group: "NEXTAR 2K LAMA", name: "NEXTAR BROWNIES LAMA", price: 133600, boxPerCarton: 8 },
+		{ id: "SKU108", group: "NEXTAR 2K LAMA", name: "NEXTAR COOKIES COCOPAN LAMA", price: 133600, boxPerCarton: 8 },
+		{ id: "SKU109", group: "NEXTAR 2K LAMA", name: "NEXTAR NASTAR LAMA", price: 133600, boxPerCarton: 8 },
+		{ id: "SKU110", group: "NEXTAR 2K LAMA", name: "NEXTAR COOKIES BLUEBERRY", price: 133600, boxPerCarton: 8 },
+		{ id: "SKU111", group: "NEXTAR 2K LAMA", name: "NEXTAR COOKIES GOGUMA", price: 133600, boxPerCarton: 8 },
+		{ id: "SKU112", group: "NEXTAR 2K LAMA", name: "NEXTAR COOKIES STRAWBERRY", price: 133600, boxPerCarton: 8 }
     ],
     discounts: {
         strataGrouping: {
@@ -192,6 +198,7 @@ const config = {
     ]
 
 };
+
 
 
 
