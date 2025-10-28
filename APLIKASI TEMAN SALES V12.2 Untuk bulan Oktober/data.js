@@ -76,8 +76,8 @@ const config = {
         { id: "SKU069", group: "NPL", name: "WAFFLE FRIES CHEESEBURGER", price: 99000, boxPerCarton: 60 },
         { id: "SKU054", group: "NPL", name: "WRAPZ KLAPA", price: 122400, boxPerCarton: 12 },
         { id: "SKU055", group: "NPL", name: "WRAPZ COKELAT", price: 122400, boxPerCarton: 12 },
-        { id: "SKU056", group: "NPL", name: "WRAPZ GOGUMA", price: 122400, boxPerCarton: 12 }, */
-        { id: "SKU077", group: "CHOCOPIE", name: "CHOCOPIE COKELAT", price: 159360, boxPerCarton: 8 },
+        { id: "SKU056", group: "NPL", name: "WRAPZ GOGUMA", price: 122400, boxPerCarton: 12 }, 
+        { id: "SKU077", group: "CHOCOPIE", name: "CHOCOPIE COKELAT", price: 159360, boxPerCarton: 8 }, */
 		{ id: "SKU078", group: "CSD 2K 12 PCS", name: "AMO CSD 2K LEMON", price: 20160, boxPerCarton: 12 },
         { id: "SKU079", group: "CSD 2K 12 PCS", name: "AMO CSD 2K COLA", price: 20160, boxPerCarton: 12 },
         { id: "SKU080", group: "CSD 2K 12 PCS", name: "AMO CSD 2K STRAWBERRY", price: 20160, boxPerCarton: 12 },
@@ -122,30 +122,15 @@ const config = {
 			"SIIP 2K": [ { minQty: 10, potongan: 3500 }, { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
 			"NEXTAR 2K": [ { minQty: 100, potongan: 5000 }, { minQty: 50, potongan: 4750 }, { minQty: 25, potongan: 4250 }, { minQty: 10, potongan: 3500 },  { minQty: 6, potongan: 3000 }, { minQty: 3, potongan: 2750 }, { minQty: 1, potongan: 2300 } ],
 			"CSD 2K 12 PCS": [ { minQty: 25, potongan: 3000 }, { minQty: 16, potongan: 2500 }, { minQty: 10, potongan: 2000 }, { minQty: 5, potongan: 1300 } ],
-			"CSD 2K 24 PCS": [ { minQty: 10, potongan: 6500 }, { minQty: 3, potongan: 5000 }, { minQty: 2, potongan: 2500 } ],
-			
+			"CSD 2K 24 PCS": [ { minQty: 10, potongan: 6500 }, { minQty: 3, potongan: 5000 }, { minQty: 2, potongan: 2500 } ]
 			/*
-            "WAFER FLAT": [ { minQty: 300, potongan: 5300 }, { minQty: 100, potongan: 5050 }, { minQty: 50, potongan: 4800 }, { minQty: 25, potongan: 4300 }, { minQty: 10, potongan: 3550 }, { minQty: 3, potongan: 2300 } ],
-            "NEXTAR 2K": [ { minQty: 100, potongan: 3000 }, { minQty: 50, potongan: 2500 }, { minQty: 25, potongan: 2000 }, { minQty: 10, potongan: 1500 }, { minQty: 3, potongan: 1000 } ],
-            "SNACK": [ { minQty: 100, potongan: 3000 }, { minQty: 50, potongan: 2500 }, { minQty: 25, potongan: 2000 }, { minQty: 10, potongan: 1500 }, { minQty: 3, potongan: 1000 } ],
-            "PASTA": [ { minQty: 50, potongan: 4000 }, { minQty: 25, potongan: 3500 }, { minQty: 10, potongan: 3000 }, { minQty: 3, potongan: 2500 } ],
-            "ROLLS 500": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-            "ROLLS 1000": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-            "WAFER 500": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-            "WAFER 1000": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
-            "CHOCOPIE": [ { minQty: 25, potongan: 4000 }, { minQty: 10, potongan: 3500 }, { minQty: 3, potongan: 3000 }, { minQty: 2, potongan: 1500 } ],
-            "BEVERAGE": [ { minQty: 10, potongan: 6500 }, { minQty: 3, potongan: 5000 }, { minQty: 2, potongan: 2500 } ],
-            "SIMBA": [ { minQty: 100, potongan: 2300 }, { minQty: 50, potongan: 1500 }, { minQty: 25, potongan: 1000 }, { minQty: 10, potongan: 600 }, { minQty: 3, potongan: 300 } ],
-            "SIMBA 2 in 1": [ { minQty: 100, potongan: 2000 }, { minQty: 50, potongan: 1500 }, { minQty: 25, potongan: 1000 }, { minQty: 10, potongan: 500 } ],
-	    "TIMEBREAK 1K": [ { minQty: 10, potongan: 4000 }, { minQty: 1, potongan: 2500 } ],
-	    "TIMEBREAK 2K": [ { minQty: 10, potongan: 4000 }, { minQty: 1, potongan: 2500 } ],
             "HELLO PANDA": [ { minQty: 25, potongan: 4000 }, { minQty: 25, potongan: 3000 }, { minQty: 10, potongan: 2000 }, { minQty: 3, potongan: 1000 } ],
             "HELLO PANDA Caramel": [ { minQty: 1, potongan: 3000 } ],
             "SIMBA BULKY": [ { minQty: 500, potongan: 2300 }, { minQty: 300, potongan: 1750 }, { minQty: 100, potongan: 1250 }, { minQty: 50, potongan: 1000 } ] */
         },
         strataPengambilan: {
             "main": {
-                "appliesTo": ["WAFER FLAT", "NEXTAR 2K", "SNACK", "NPL", "WAFER 1000", "WAFER 500", "ROLLS 500", "ROLLS 1000", "CHOCOPIE", "PASTA", "TIMEBREAK 1K", "TIMEBREAK 2K", "HELLO PANDA", "HELLO PANDA Caramel", "BISCUIT non 2K", "BEVERAGE"],
+                "appliesTo": ["WAFER 500", "WAFER 1K", "ROLL 500", "ROLL 1K", "TIMEBREAK 1K", "TIMEBREAK 2K", "PASTA 500", "WAFER 2K", "WAFER 5K", "AHH 500", "AHH 1K", "SIIP 500", "SIIP 1K", "SIIP 2K", "NEXTAR 2K", "CSD 2K 12 PCS", "CSD 2K 24 PCS", "HELLO PANDA" ],
                 "tiers": [ { "minValue": 3000000, "discount": 0.02 }, { "minValue": 2000000, "discount": 0.015 }, { "minValue": 1000000, "discount": 0.01 } ]
             },
             "simba": {
@@ -215,6 +200,7 @@ const config = {
     ]
 
 };
+
 
 
 
