@@ -86,11 +86,13 @@ const config = {
         { id: "SKU103", group: "CSD 2K 24 PCS", name: "AMO CSD 2K STRAWBERRY", price: 40320, boxPerCarton: 24 },
         { id: "SKU081", group: "CSD 2K 24 PCS", name: "AMO CSD 2K ORANGE", price: 40320, boxPerCarton: 24 },
         { id: "SKU082", group: "CSD 2K 24 PCS", name: "AMO CSD 2K GRAPE", price: 40320, boxPerCarton: 24 },
-        { id: "SKU083", group: "SIMBA", name: "SIMBA 500 COKELAT", price: 68000, boxPerCarton: 16 },
-        { id: "SKU084", group: "SIMBA", name: "SIMBA 1K COKELAT", price: 47400, boxPerCarton: 6 },
-        { id: "SKU085", group: "SIMBA", name: "SIMBA 1K STRAWBERRY", price: 47400, boxPerCarton: 6 },
-        { id: "SKU086", group: "SIMBA", name: "SIMBA 2K COKELAT", price: 102000, boxPerCarton: 12 },
-        { id: "SKU087", group: "SIMBA", name: "SIMBA 2K STRAWBERRY", price: 102000, boxPerCarton: 12 },
+        { id: "SKU083", group: "SIMBA 500", name: "SIMBA 500 COKELAT", price: 68000, boxPerCarton: 16 },
+        { id: "SKU084", group: "SIMBA 1K", name: "SIMBA 1K COKELAT", price: 47400, boxPerCarton: 6 },
+        { id: "SKU085", group: "SIMBA 1K", name: "SIMBA 1K STRAWBERRY", price: 48000, boxPerCarton: 6 },
+        { id: "SKU086", group: "SIMBA 2K", name: "SIMBA 2K COKELAT ISI 10", price: 102000, boxPerCarton: 12 },
+        { id: "SKU087", group: "SIMBA 2K", name: "SIMBA 2K STRAWBERRY ISI 10", price: 102000, boxPerCarton: 12 },
+		{ id: "SKU105", group: "SIMBA 2K", name: "SIMBA 2K COKELAT ISI 5", price: 68000, boxPerCarton: 12 },
+        { id: "SKU106", group: "SIMBA 2K", name: "SIMBA 2K STRAWBERRY ISI 5", price: 68000, boxPerCarton: 12 },
         { id: "SKU088", group: "SIMBA 2 in 1", name: "SIMBA 2 IN 1 COKELAT", price: 108000, boxPerCarton: 60 },
         { id: "SKU089", group: "SIMBA 2 in 1", name: "SIMBA 2 IN 1 STRAWBERRY", price: 108000, boxPerCarton: 60 },
         { id: "SKU090", group: "HELLO PANDA", name: "HELLO PANDA COKELAT", price: 99000, boxPerCarton: 12 },
@@ -99,8 +101,8 @@ const config = {
         { id: "SKU093", group: "HELLO PANDA", name: "HELLO PANDA MILK", price: 99000, boxPerCarton: 12 },
         { id: "SKU094", group: "HELLO PANDA", name: "HELLO PANDA DOUBLE", price: 99000, boxPerCarton: 12 },
         { id: "SKU095", group: "HELLO PANDA", name: "HELLO PANDA CARAMEL", price: 99000, boxPerCarton: 12 },
-        { id: "SKU097", group: "SIMBA BULKY", name: "SIMBA BULKY COKELAT", price: 70000, boxPerCarton: 2 },
-        { id: "SKU098", group: "SIMBA BULKY", name: "SIMBA BULKY STRAWBERRY", price: 70000, boxPerCarton: 2 }
+        { id: "SKU097", group: "SIMBA BULKY", name: "SIMBA BULKY COKELAT", price: 77000, boxPerCarton: 2 },
+        { id: "SKU098", group: "SIMBA BULKY", name: "SIMBA BULKY STRAWBERRY", price: 77000, boxPerCarton: 2 }
     ],
     discounts: {
         strataGrouping: {
@@ -194,6 +196,7 @@ const config = {
     ]
 
 };
+
 
 
 
