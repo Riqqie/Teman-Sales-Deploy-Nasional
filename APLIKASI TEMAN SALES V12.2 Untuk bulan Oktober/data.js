@@ -128,7 +128,7 @@ const config = {
         },
         strataPengambilan: {
             "main": {
-                "appliesTo": ["WAFER 500", "WAFER 1K", "ROLLS 500", "ROLLS 1K", "TIMEBREAK 1K", "TIMEBREAK 2K", "PASTA", "WAFER 2K", "WAFER 5K", "AHH 500", "AHH 1K", "SIIP 500", "SIIP 1K", "SIIP 2K", "NEXTAR 2K", "CSD 2K 12 PCS", "CSD 2K 24 PCS", "HELLO PANDA",  "KRIMERO", "NEXTAR STAR", "NEXTAR NOIR", "NEXTAR 5K", "KRISBITE", "GRANDE" ],
+                "appliesTo": ["WAFER 500", "WAFER 1K", "ROLLS 500", "ROLLS 1K", "TIMEBREAK 1K", "TIMEBREAK 2K", "PASTA", "WAFER 2K", "WAFER 5K", "AHH 500", "AHH 1K", "SIIP 500", "SIIP 1K", "SIIP 2K", "NEXTAR 2K", "CSD 2K 12 PCS", "CSD 2K 24 PCS", "HELLO PANDA",  "KRIMERO", "NEXTAR STAR", "NEXTAR NOIR", "NEXTAR 5K", "KRISBITE", "GRANDE", "NEXTAR 2K LAMA" ],
                 "tiers": [ { "minValue": 3000000, "discount": 0.02 }, { "minValue": 2000000, "discount": 0.015 }, { "minValue": 1000000, "discount": 0.01 } ]
             },
             "simba": {
@@ -198,6 +198,7 @@ const config = {
     ]
 
 };
+
 
 
 
