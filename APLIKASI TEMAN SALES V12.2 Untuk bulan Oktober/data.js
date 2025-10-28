@@ -70,12 +70,13 @@ const config = {
         { id: "SKU064", group: "KRISBITE", name: "KRISBITE COKLAT", price: 133600, boxPerCarton: 8 },
         { id: "SKU065", group: "GRANDE", name: "GRANDE COKLAT", price: 100200, boxPerCarton: 12 },
         { id: "SKU066", group: "GRANDE", name: "GRANDE CHEESECAKE STRAWBERRY", price: 100200, boxPerCarton: 6 },
+/*
         { id: "SKU067", group: "NPL", name: "BDAY COOKIE RICHBUTTER", price: 100000, boxPerCarton: 6 },
         { id: "SKU068", group: "NPL", name: "WAFFLE FRIES FIRE WINGS", price: 99000, boxPerCarton: 60 },
         { id: "SKU069", group: "NPL", name: "WAFFLE FRIES CHEESEBURGER", price: 99000, boxPerCarton: 60 },
         { id: "SKU054", group: "NPL", name: "WRAPZ KLAPA", price: 122400, boxPerCarton: 12 },
         { id: "SKU055", group: "NPL", name: "WRAPZ COKELAT", price: 122400, boxPerCarton: 12 },
-        { id: "SKU056", group: "NPL", name: "WRAPZ GOGUMA", price: 122400, boxPerCarton: 12 },
+        { id: "SKU056", group: "NPL", name: "WRAPZ GOGUMA", price: 122400, boxPerCarton: 12 }, */
         { id: "SKU077", group: "CHOCOPIE", name: "CHOCOPIE COKELAT", price: 159360, boxPerCarton: 8 },
 		{ id: "SKU078", group: "CSD 2K 12 PCS", name: "AMO CSD 2K LEMON", price: 20160, boxPerCarton: 12 },
         { id: "SKU079", group: "CSD 2K 12 PCS", name: "AMO CSD 2K COLA", price: 20160, boxPerCarton: 12 },
@@ -193,5 +194,6 @@ const config = {
     ]
 
 };
+
 
 
