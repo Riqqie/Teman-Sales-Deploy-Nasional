@@ -53,10 +53,10 @@ const config = {
         { id: "SKU044", group: "SNACK", name: "SIIP 2K JAGUNG", price: 100200, boxPerCarton: 12 },
         { id: "SKU045", group: "SNACK", name: "SIIP 2K COKELAT", price: 100200, boxPerCarton: 12 },
         { id: "SKU046", group: "SNACK", name: "SIIP 2K GOGUMA", price: 100200, boxPerCarton: 12 },
-        { id: "SKU047", group: "SNACK", name: "AHH 500 KEJU", price: 84000, boxPerCarton: 10 },
-        { id: "SKU048", group: "SNACK", name: "AHH 500 COKELAT", price: 84000, boxPerCarton: 10 },
-        { id: "SKU049", group: "SNACK", name: "AHH 500 GOGUMA", price: 84000, boxPerCarton: 10 },
-        { id: "SKU050", group: "SNACK", name: "AHH 500 COCOPAN", price: 84000, boxPerCarton: 10 },
+        { id: "SKU047", group: "AHH 500", name: "AHH 500 KEJU", price: 84000, boxPerCarton: 10 },
+        { id: "SKU048", group: "AHH 500", name: "AHH 500 COKELAT", price: 84000, boxPerCarton: 10 },
+        { id: "SKU049", group: "AHH 500", name: "AHH 500 GOGUMA", price: 84000, boxPerCarton: 10 },
+        { id: "SKU050", group: "AHH 500", name: "AHH 500 COCOPAN", price: 84000, boxPerCarton: 10 },
         { id: "SKU051", group: "AHH 1000", name: "AHH 1K KEJU", price: 102000, boxPerCarton: 12 },
         { id: "SKU096", group: "AHH 1000", name: "AHH 1K COKELAT", price: 102000, boxPerCarton: 12 },
         { id: "SKU100", group: "AHH 1000", name: "AHH 1K STW CC", price: 102000, boxPerCarton: 12 },
@@ -190,4 +190,5 @@ const config = {
         { class: 'A+', min: 750000000, max: 999999999, rates: { '4': 0.0475, '3': 0.0450, '2': 0.0425, '1': 0.0400 } },
         { class: 'S', min: 1000000000, max: Infinity, rates: { '4': 0.0500, '3': 0.0475, '2': 0.0450, '1': 0.0425 } }
     ]
+
 };
