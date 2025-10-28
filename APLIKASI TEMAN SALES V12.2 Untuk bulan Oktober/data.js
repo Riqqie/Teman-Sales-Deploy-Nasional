@@ -106,6 +106,13 @@ const config = {
     ],
     discounts: {
         strataGrouping: {
+			"WAFER 500": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
+			"WAFER 1K": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
+			"ROLL 500": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
+			"ROLL 1K": [ { minQty: 10, potongan: 3000 }, { minQty: 1, potongan: 2300 } ],
+			"TIMEBREAK 1K": [ { minQty: 10, potongan: 4000 }, { minQty: 1, potongan: 2500 } ],
+			"TIMEBREAK 2K": [ { minQty: 10, potongan: 4000 }, { minQty: 1, potongan: 2500 } ],
+			/*
             "WAFER FLAT": [ { minQty: 300, potongan: 5300 }, { minQty: 100, potongan: 5050 }, { minQty: 50, potongan: 4800 }, { minQty: 25, potongan: 4300 }, { minQty: 10, potongan: 3550 }, { minQty: 3, potongan: 2300 } ],
             "NEXTAR 2K": [ { minQty: 100, potongan: 3000 }, { minQty: 50, potongan: 2500 }, { minQty: 25, potongan: 2000 }, { minQty: 10, potongan: 1500 }, { minQty: 3, potongan: 1000 } ],
             "SNACK": [ { minQty: 100, potongan: 3000 }, { minQty: 50, potongan: 2500 }, { minQty: 25, potongan: 2000 }, { minQty: 10, potongan: 1500 }, { minQty: 3, potongan: 1000 } ],
@@ -122,7 +129,7 @@ const config = {
 	    "TIMEBREAK 2K": [ { minQty: 10, potongan: 4000 }, { minQty: 1, potongan: 2500 } ],
             "HELLO PANDA": [ { minQty: 25, potongan: 4000 }, { minQty: 25, potongan: 3000 }, { minQty: 10, potongan: 2000 }, { minQty: 3, potongan: 1000 } ],
             "HELLO PANDA Caramel": [ { minQty: 1, potongan: 3000 } ],
-            "SIMBA BULKY": [ { minQty: 500, potongan: 2300 }, { minQty: 300, potongan: 1750 }, { minQty: 100, potongan: 1250 }, { minQty: 50, potongan: 1000 } ]
+            "SIMBA BULKY": [ { minQty: 500, potongan: 2300 }, { minQty: 300, potongan: 1750 }, { minQty: 100, potongan: 1250 }, { minQty: 50, potongan: 1000 } ] */
         },
         strataPengambilan: {
             "main": {
@@ -196,6 +203,7 @@ const config = {
     ]
 
 };
+
 
 
 
