@@ -51,6 +51,8 @@
         .group-hello-panda { background-color: #fce4ec; border-left: 5px solid #e91e63; }
         .group-biscuit-non-2k { background-color: #fff3e0; border-left: 5px solid #ff9800; }
         .group-simba-bulky { background-color: #e8eaf6; border-left: 5px solid #3f51b5; }
+		.group-csd-2k-12-pcs { background-color: #e0f2f1; border-left: 5px solid #009688; }
+        .group-csd-2k-24-pcs { background-color: #e0f2f1; border-left: 5px solid #009688; }
         
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .product-table, .loyalty-table { width: 100%; border-collapse: collapse; }
@@ -299,7 +301,7 @@
                         </div>
                         <div class="summary-item"><div class="summary-label">Pembayaran & Opsi</div>
                             <div><label style="display: block; margin-bottom: 5px;"><input type="checkbox" id="cod-checkbox" checked> COD</label></div>
-                            <div><label style="display: block; margin-bottom: 5px;"><input type="checkbox" id="promo-tambahan-5k-checkbox" checked> Terapkan Promo Tambahan 5K</label></div>
+                            <div><label style="display: block; margin-bottom: 5px;"><input type="checkbox" id="promo-amo-checkbox" checked> Terapkan Promo AMO</label></div>
                             <div>
                                 <label style="display: block; margin-bottom: 5px;">
                                     <input type="checkbox" id="voucher-alokasi-checkbox"> Alokasikan Voucher
@@ -349,10 +351,10 @@
                 const draft = {
                     order: currentOrder,
                     tokoName: tokoName,
-                    voucherDiscount: document.getElementById('voucher-class-dropdown').value, // <-- PERUBAHAN 5A
+                    voucherDiscount: document.getElementById('voucher-class-dropdown').value,
                     cod: document.getElementById('cod-checkbox').checked,
                     alokasiDiskon: document.getElementById('voucher-alokasi-checkbox').checked,
-                    promoTambahan5k: document.getElementById('promo-tambahan-5k-checkbox').checked,
+                    promoAmo: document.getElementById('promo-amo-checkbox').checked, // <-- PERUBAHAN 7A
                     dealKhususAktif: document.getElementById('deal-khusus-checkbox').checked,
                     dealKhususNominal: document.getElementById('deal-khusus-input').value,
                     fokusAlokasi: Array.from(document.querySelectorAll('.fokus-checkbox:checked')).map(cb => cb.value)
@@ -455,11 +457,14 @@
         function renderDiscountList() {
             const container = document.getElementById('discount-list-container');
             let content = '<h3>Diskon Strata Pengambilan (Berdasarkan Nilai)</h3><h4>Grup Utama (Non-Simba)</h4><table class="info-table"><thead><tr><th>Minimal Pembelian</th><th>Diskon</th></tr></thead><tbody>' + config.discounts.strataPengambilan.main.tiers.map(t => `<tr><td>${formatCurrency(t.minValue)}</td><td>${(t.discount * 100).toFixed(2)}%</td></tr>`).join('') + '</tbody></table>' + '<h4>Grup SIMBA</h4><table class="info-table"><thead><tr><th>Minimal Pembelian</th><th>Diskon</th></tr></thead><tbody>' + config.discounts.strataPengambilan.simba.tiers.map(t => `<tr><td>${formatCurrency(t.minValue)}</td><td>${(t.discount * 100).toFixed(2)}%</td></tr>`).join('') + '</tbody></table><hr>' + '<h3>Diskon per Grouping (Berdasarkan Kuantitas)</h3>' + Object.keys(config.discounts.strataGrouping).map(group => `<h4>Grup ${group}</h4><table class="info-table"><thead><tr><th>Min Kuantitas (Karton)</th><th>Potongan per Karton</th></tr></thead><tbody>` + config.discounts.strataGrouping[group].map(t => `<tr><td>${t.minQty}</td><td>${formatCurrency(t.potongan)}</td></tr>`).join('') + '</tbody></table>').join('');
-            if (config.discounts.promoTambahan5k) {
-                const deal = config.discounts.promoTambahan5k;
-                const applicableProducts = deal.appliesTo.map(sku => config.products.find(p => p.id === sku)?.name || sku).join(', ');
-                content += `<hr><h3>Promo Tambahan 5K</h3><p style="font-size: 0.9em;">Berlaku hanya untuk total akumulasi produk: <strong>${applicableProducts}</strong></p><table class="info-table"><thead><tr><th>Min Kuantitas (Karton)</th><th>Potongan per Karton</th></tr></thead><tbody>` + deal.tiers.map(t => `<tr><td>${t.minQty}</td><td>${formatCurrency(t.potongan)}</td></tr>`).join('') + '</tbody></table>';
+            
+            // if (config.discounts.promoAmo) {
+                const deal = config.discounts.promoAmo;
+                content += `<hr><h3>Promo Tambahan AMO</h3><p style="font-size: 0.9em;">Berlaku untuk grup: <strong>${deal.appliesToGroups.join(', ')}</strong></p>
+                <p style="font-size: 0.9em;">Syarat: Minimal <strong>${deal.minCartons} karton</strong> DAN <strong>${deal.minVariants} varian</strong> (per grup).</p>
+                <p style="font-size: 0.9em;">Potongan: <strong>${formatCurrency(deal.potongan)} per karton</strong>.</p>`;
             }
+
             if (config.discounts.promoSpesial && config.discounts.promoSpesial.length > 0) {
                  config.discounts.promoSpesial.forEach(promo => {
                      if (promo.aktif) {
@@ -522,22 +527,43 @@
             const dealKhususPerKarton = parseFloat(document.getElementById('deal-khusus-input').value) || 0;
             const dealKhususSKUs = ["SKU011", "SKU012", "SKU013", "SKU014", "SKU015"];
             let totalDiskonPotongan = 0;
-            orderLineItems.forEach(line => {
+            
+            // orderLineItems.forEach(line => {
                 let itemPotonganTotal = 0;
                 const groupingTier = config.discounts.strataGrouping[line.product.group]?.find(t => groupTotals[line.product.group].totalCartons >= t.minQty);
                 if (groupingTier) itemPotonganTotal += line.qtyInCartons * groupingTier.potongan;
-                if (document.getElementById('promo-tambahan-5k-checkbox').checked && config.discounts.promoTambahan5k) {
-                    const totalPromoCartons = orderLineItems.filter(l => config.discounts.promoTambahan5k.appliesTo.includes(l.id)).reduce((sum, l) => sum + l.qtyInCartons, 0);
-                    const promoTier = config.discounts.promoTambahan5k.tiers.find(t => totalPromoCartons >= t.minQty);
-                    if (promoTier && config.discounts.promoTambahan5k.appliesTo.includes(line.id)) itemPotonganTotal += line.qtyInCartons * promoTier.potongan;
-                }
+                
+                // Logika promo 5k DIHAPUS dari sini
+                
                 if (dealKhususAktif && dealKhususPerKarton > 0 && dealKhususSKUs.includes(line.id)) itemPotonganTotal += line.qtyInCartons * dealKhususPerKarton;
                 line.itemPotongan = itemPotonganTotal;
                 totalDiskonPotongan += itemPotonganTotal;
             });
-            const subtotalSetelahPotongan = subtotalSetelahStrata - totalDiskonPotongan;
 
-            let diskonPromoSpesialRp = 0;
+            // --- LOGIKA PROMO AMO BARU DIMULAI DI SINI ---
+            if (document.getElementById('promo-amo-checkbox').checked && config.discounts.promoAmo) {
+                const promoConfig = config.discounts.promoAmo;
+                
+                promoConfig.appliesToGroups.forEach(groupName => {
+                    const itemsInGroup = orderLineItems.filter(line => line.product.group === groupName);
+                    const totalCartonsInGroup = itemsInGroup.reduce((sum, line) => sum + line.qtyInCartons, 0);
+                    const totalVariantsInGroup = new Set(itemsInGroup.map(line => line.id)).size;
+
+                    // Cek kedua syarat
+                    if (totalCartonsInGroup >= promoConfig.minCartons && totalVariantsInGroup >= promoConfig.minVariants) {
+                        // Jika lolos, tambahkan potongan ke setiap item di grup itu
+                        itemsInGroup.forEach(line => {
+                            const itemPotonganAmo = line.qtyInCartons * promoConfig.potongan;
+                            line.itemPotongan += itemPotonganAmo; // Tambahkan ke itemPotongan yang sudah ada
+                            totalDiskonPotongan += itemPotonganAmo; // Tambahkan ke total diskon potongan
+                        });
+                    }
+                });
+            }
+            // --- LOGIKA PROMO AMO SELESAI ---
+
+            const subtotalSetelahPotongan = subtotalSetelahStrata - totalDiskonPotongan;
+            // let diskonPromoSpesialRp = 0;
             const activePromos = [];
             if (config.discounts.promoSpesial && Array.isArray(config.discounts.promoSpesial)) {
                 config.discounts.promoSpesial.forEach(promo => {
@@ -561,9 +587,7 @@
                 diskonCodRp = subtotalSetelahPromoSpesial * config.discounts.cod.discount;
             }
             
-            // --- PERUBAHAN 4 DIMULAI DI SINI ---
-            const diskonVoucherPersen = (parseFloat(document.getElementById('voucher-class-dropdown').value) || 0); // Misal: 0.035
-            // --- PERUBAHAN 4 SELESAI DI SINI ---
+            const diskonVoucherPersen = (parseFloat(document.getElementById('voucher-class-dropdown').value) || 0); 
 
             const isAlokasiAktif = document.getElementById('voucher-alokasi-checkbox').checked;
             const selectedSkus = isAlokasiAktif ? Array.from(document.querySelectorAll('.fokus-checkbox:checked')).map(cb => cb.value) : [];
@@ -577,7 +601,7 @@
                 if (mainTier && config.discounts.strataPengambilan.main.appliesTo.includes(line.product.group)) diskonStrataItem = line.itemValue * mainTier.discount;
                 else if (simbaTier && config.discounts.strataPengambilan.simba.appliesTo.includes(line.product.group)) diskonStrataItem = line.itemValue * simbaTier.discount;
                 subtotalItem -= diskonStrataItem;
-                subtotalItem -= line.itemPotongan;
+                subtotalItem -= line.itemPotongan; // itemPotongan sekarang sudah termasuk promo AMO jika ada
 
                 activePromos.forEach(({ promo, subtotalPromoItems }) => {
                     if (promo.syarat.produk.includes(line.id) && subtotalPromoItems > 0) {
@@ -617,15 +641,25 @@
 
             if (forceFokusListUpdate) updateFokusCheckboxes(orderLineItems);
 
-            let diskonGroupingRp = 0, diskonPromo5kRp = 0, diskonDealKhususRp = 0;
+            // let diskonGroupingRp = 0, diskonAmoRp = 0, diskonDealKhususRp = 0;
+            if (document.getElementById('promo-amo-checkbox').checked && config.discounts.promoAmo) {
+                const promoConfig = config.discounts.promoAmo;
+                promoConfig.appliesToGroups.forEach(groupName => {
+                    const itemsInGroup = orderLineItems.filter(line => line.product.group === groupName);
+                    const totalCartonsInGroup = itemsInGroup.reduce((sum, line) => sum + line.qtyInCartons, 0);
+                    const totalVariantsInGroup = new Set(itemsInGroup.map(line => line.id)).size;
+                    if (totalCartonsInGroup >= promoConfig.minCartons && totalVariantsInGroup >= promoConfig.minVariants) {
+                        itemsInGroup.forEach(line => {
+                            diskonAmoRp += line.qtyInCartons * promoConfig.potongan;
+                        });
+                    }
+                });
+            }
+            
             orderLineItems.forEach(line => {
                 const groupingTier = config.discounts.strataGrouping[line.product.group]?.find(t => groupTotals[line.product.group].totalCartons >= t.minQty);
                 if (groupingTier) diskonGroupingRp += line.qtyInCartons * groupingTier.potongan;
-                if (document.getElementById('promo-tambahan-5k-checkbox').checked && config.discounts.promoTambahan5k) {
-                    const totalPromoCartons = orderLineItems.filter(l => config.discounts.promoTambahan5k.appliesTo.includes(l.id)).reduce((sum, l) => sum + l.qtyInCartons, 0);
-                    const promoTier = config.discounts.promoTambahan5k.tiers.find(t => totalPromoCartons >= t.minQty);
-                    if (promoTier && config.discounts.promoTambahan5k.appliesTo.includes(line.id)) diskonPromo5kRp += line.qtyInCartons * promoTier.potongan;
-                }
+                // Logika promo 5k dihapus dari sini
                 if (dealKhususAktif && dealKhususPerKarton > 0 && dealKhususSKUs.includes(line.id)) diskonDealKhususRp += line.qtyInCartons * dealKhususPerKarton;
             });
 
@@ -634,7 +668,7 @@
                     totalHargaAwal, totalDiskon, hargaNett,
                     diskonBreakdown: {
                         strata: Math.round(diskonStrataRp),
-                        grouping: Math.round(diskonGroupingRp + diskonPromo5kRp),
+                        grouping: Math.round(diskonGroupingRp + diskonAmoRp), // <-- Diubah di sini
                         dealKhusus: Math.round(diskonDealKhususRp),
                         promoSpesial: Math.round(diskonPromoSpesialRp),
                         cod: Math.round(diskonCodRp),
@@ -643,7 +677,7 @@
                 },
                 orderLineItems, mainValue: totalBruttoMain, simbaValue: totalBruttoSimba, groupTotals
             };
-        }
+            // }
 
         function updateFokusCheckboxes(orderLineItems) {
             const listContainer = document.getElementById('voucher-fokus-list');
@@ -709,17 +743,27 @@
                     }
                 }
             }
-             if (document.getElementById('promo-tambahan-5k-checkbox').checked && config.discounts.promoTambahan5k) {
-                const totalPromoCartons = orderLineItems.filter(l => config.discounts.promoTambahan5k.appliesTo.includes(l.id)).reduce((sum, l) => sum + l.qtyInCartons, 0);
-                const promoConfig = config.discounts.promoTambahan5k;
-                const currentTier = promoConfig.tiers.find(t => totalPromoCartons >= t.minQty);
-                const nextTier = [...promoConfig.tiers].reverse().find(t => totalPromoCartons < t.minQty);
-                if (totalPromoCartons > 0) {
-                    if (nextTier) { upsellMessages.push(`<div class="upsell-item goal"><strong>Promo Tambahan 5K:</strong> Jumlah <strong>${totalPromoCartons.toFixed(2)} karton</strong> (Potongan: <strong>${formatCurrency(currentTier?.potongan || 0)}/k</strong>).<br><strong>Tier berikutnya:</strong> <strong>${nextTier.minQty} karton</strong> (Potongan: <strong>${formatCurrency(nextTier.potongan)}/k</strong>).</div>`); }
-                    else if (currentTier) { upsellMessages.push(`<div class="upsell-item achieved"><strong>Promo Tambahan 5K:</strong> <strong>Selamat!</strong> Anda mencapai potongan tertinggi (<strong>${formatCurrency(currentTier.potongan)}/karton</strong>).</div>`); }
-                }
+            
+            // if (document.getElementById('promo-amo-checkbox').checked && config.discounts.promoAmo) {
+                const promoConfig = config.discounts.promoAmo;
+                promoConfig.appliesToGroups.forEach(groupName => {
+                    const itemsInGroup = orderLineItems.filter(line => line.product.group === groupName);
+                    const totalCartonsInGroup = itemsInGroup.reduce((sum, line) => sum + line.qtyInCartons, 0);
+                    const totalVariantsInGroup = new Set(itemsInGroup.map(line => line.id)).size;
+                    
+                    if (totalCartonsInGroup > 0) { // Hanya tampilkan jika user membeli grup tsb.
+                        if (totalCartonsInGroup >= promoConfig.minCartons && totalVariantsInGroup >= promoConfig.minVariants) {
+                            upsellMessages.push(`<div class="upsell-item achieved"><strong>Promo AMO (${groupName}):</strong> <strong>Selamat!</strong> Anda mendapat potongan <strong>${formatCurrency(promoConfig.potongan)}/karton</strong>.</div>`);
+                        } else {
+                            let goalMsg = `<strong>Promo AMO (${groupName}):</strong> `;
+                            if (totalCartonsInGroup < promoConfig.minCartons) goalMsg += `Tambah <strong>${(promoConfig.minCartons - totalCartonsInGroup).toFixed(2)} karton</strong> lagi. `;
+                            if (totalVariantsInGroup < promoConfig.minVariants) goalMsg += `Tambah <strong>${(promoConfig.minVariants - totalVariantsInGroup)} varian</strong> lagi.`;
+                            upsellMessages.push(`<div class="upsell-item goal">${goalMsg}<br>Untuk dapat potongan <strong>${formatCurrency(promoConfig.potongan)}/karton</strong>.</div>`);
+                        }
+                    }
+                });
             }
-            if (config.discounts.promoSpesial && Array.isArray(config.discounts.promoSpesial)) {
+            // if (config.discounts.promoSpesial && Array.isArray(config.discounts.promoSpesial)) {
                 config.discounts.promoSpesial.forEach(promo => {
                     if (!promo.aktif) return;
                     const subtotalPromoItems = orderLineItems
@@ -781,9 +825,9 @@
             const orderToSave = {
                 tokoName, summary, items: itemsToSave, date: new Date().toISOString(),
                 cod: document.getElementById('cod-checkbox').checked,
-                voucherDiscount: parseFloat(document.getElementById('voucher-class-dropdown').value) || 0, // <-- PERUBAHAN 5B
+                voucherDiscount: parseFloat(document.getElementById('voucher-class-dropdown').value) || 0,
                 alokasiDiskon: document.getElementById('voucher-alokasi-checkbox').checked,
-                promoTambahan5k: document.getElementById('promo-tambahan-5k-checkbox').checked,
+                promoAmo: document.getElementById('promo-amo-checkbox').checked, // <-- PERUBAHAN 7B
                 dealKhususAktif: document.getElementById('deal-khusus-checkbox').checked,
                 dealKhususNominal: parseFloat(document.getElementById('deal-khusus-input').value) || 0,
                 fokusAlokasi: Array.from(document.querySelectorAll('.fokus-checkbox:checked')).map(cb => cb.value)
@@ -824,9 +868,10 @@
         function resetOrder() {
             currentOrder = {}; editingOrderId = null;
             document.getElementById('toko-name-input').value = ''; document.getElementById('cod-checkbox').checked = true;
-            document.getElementById('voucher-alokasi-checkbox').checked = false; document.getElementById('promo-tambahan-5k-checkbox').checked = false;
+            document.getElementById('voucher-alokasi-checkbox').checked = false; 
+            document.getElementById('promo-amo-checkbox').checked = true; // <-- PERUBAHAN 7C
             document.getElementById('deal-khusus-checkbox').checked = false; document.getElementById('deal-khusus-input').value = '';
-            document.getElementById('voucher-class-dropdown').value = '0'; // <-- PERUBAHAN 5C
+            document.getElementById('voucher-class-dropdown').value = '0'; 
             document.getElementById('fokus-alokasi-container').style.display = 'none'; document.querySelector('.order-actions button').textContent = "Simpan Order";
             document.getElementById('search-input').value = ''; document.getElementById('clear-search-btn').style.display = 'none';
             localStorage.removeItem(DRAFT_KEY); renderProducts(true);
@@ -838,8 +883,8 @@
             for (const productId in orderToEdit.items) { currentOrder[productId] = { carton: orderToEdit.items[productId].carton, box: orderToEdit.items[productId].box, stockCarton: orderToEdit.items[productId].stockCarton, stockBox: orderToEdit.items[productId].stockBox }; }
             editingOrderId = orderId;
             document.getElementById('toko-name-input').value = orderToEdit.tokoName; document.getElementById('cod-checkbox').checked = orderToEdit.cod;
-            document.getElementById('voucher-class-dropdown').value = orderToEdit.voucherDiscount || '0'; // <-- PERUBAHAN 5D
-            document.getElementById('promo-tambahan-5k-checkbox').checked = orderToEdit.promoTambahan5k || false;
+            document.getElementById('voucher-class-dropdown').value = orderToEdit.voucherDiscount || '0'; 
+            document.getElementById('promo-amo-checkbox').checked = orderToEdit.promoAmo || false; // <-- PERUBAHAN 7D
             document.getElementById('deal-khusus-checkbox').checked = orderToEdit.dealKhususAktif || false; document.getElementById('deal-khusus-input').value = orderToEdit.dealKhususNominal || '';
             document.querySelector('.order-actions button').textContent = "Update Order";
             const alokasiCheckbox = document.getElementById('voucher-alokasi-checkbox'); alokasiCheckbox.checked = orderToEdit.alokasiDiskon || false;
@@ -935,9 +980,7 @@
 
             config.loyaltyTiers.forEach(tier => {
                 const option = document.createElement('option');
-                // Value-nya adalah rate (misal: 0.035)
                 option.value = tier.rates['4']; 
-                // Teksnya adalah nama kelas dan persennya
                 option.text = `${tier.class} (${(tier.rates['4'] * 100).toFixed(3)}%)`;
                 selectEl.appendChild(option);
             });
@@ -971,9 +1014,9 @@
                     const draft = JSON.parse(savedDraft);
                     currentOrder = draft.order || {};
                     document.getElementById('toko-name-input').value = draft.tokoName || '';
-                    document.getElementById('voucher-class-dropdown').value = draft.voucherDiscount || '0'; // <-- PERUBAHAN 5E
+                    document.getElementById('voucher-class-dropdown').value = draft.voucherDiscount || '0'; 
                     document.getElementById('cod-checkbox').checked = draft.cod !== undefined ? draft.cod : true;
-                    document.getElementById('promo-tambahan-5k-checkbox').checked = draft.promoTambahan5k || false;
+                    document.getElementById('promo-amo-checkbox').checked = draft.promoAmo !== undefined ? draft.promoAmo : true; // <-- PERUBAHAN 7E
                     document.getElementById('deal-khusus-checkbox').checked = draft.dealKhususAktif || false;
                     document.getElementById('deal-khusus-input').value = draft.dealKhususNominal || '';
                     const alokasiCheckbox = document.getElementById('voucher-alokasi-checkbox');
@@ -984,7 +1027,7 @@
             }
             savedOrders = loadSavedOrders(); setViewMode(); renderProducts(true); 
             populateLoyaltyTable();
-            populateVoucherClassDropdown(); // <-- PERUBAHAN 3
+            populateVoucherClassDropdown(); 
             
             const draftFokus = sessionStorage.getItem('draft_fokus_alokasi');
             if(draftFokus) {
@@ -999,12 +1042,13 @@
                 calculateAll(false); saveDraft();
             });
             
-            const mainInputs = ['toko-name-input', 'voucher-class-dropdown', 'cod-checkbox', 'promo-tambahan-5k-checkbox', 'deal-khusus-input', 'deal-khusus-checkbox'];
+            // const mainInputs = ['toko-name-input', 'voucher-class-dropdown', 'cod-checkbox', 'promo-amo-checkbox', 'deal-khusus-input', 'deal-khusus-checkbox'];
             mainInputs.forEach(id => {
                 const element = document.getElementById(id);
                 const eventType = (element.type === 'checkbox' || element.tagName.toLowerCase() === 'select') ? 'change' : 'input';
                 element.addEventListener(eventType, () => { calculateAll(false); saveDraft(); });
             });
+            
             const omzetInput = document.getElementById('monthly-omzet-input');
             omzetInput.addEventListener('input', (e) => {
                 let value = e.target.value.replace(/\./g, '');
