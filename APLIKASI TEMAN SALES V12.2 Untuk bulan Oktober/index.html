@@ -178,15 +178,15 @@
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </header>
             <div class="tabs">
-                <button class="tab-button active" onclick="showPage('loyalty')">Loyalty</button>
-                <button class="tab-button" onclick="showPage('kalkulator')">Kalkulator</button>
+                <button class="tab-button active" onclick="showPage('kalkulator')">Kalkulator</button>
+                <button class="tab-button" onclick="showPage('loyalty')">Loyalty</button>
                 <button class="tab-button" onclick="showPage('katalog')">Katalog</button>
                 <button class="tab-button" onclick="showPage('riwayat')">Riwayat Order</button>
                 <button class="tab-button" onclick="showPage('diskon')">Info Diskon</button>
                 <button class="tab-button" onclick="showPage('promo')">Info Promo</button>
             </div>
             
-            <div id="kalkulator" class="content page">
+            <div id="kalkulator" class="content page active">
                 <div id="search-container">
                     <input type="text" id="search-input" oninput="filterProducts()" placeholder="🔍 Cari nama produk...">
                     <span id="clear-search-btn" onclick="clearSearch()">&times;</span>
@@ -194,7 +194,7 @@
                 <div id="product-list"></div>
             </div>
 
-            <div id="loyalty" class="content page active">
+            <div id="loyalty" class="content page">
                 <h2>Insentif Loyalty</h2>
                 <p>Gunakan halaman ini untuk melakukan simulasi perhitungan bonus insentif berdasarkan target omzet dan pencapaian mingguan.</p>
 
@@ -290,15 +290,13 @@
                         <div class="summary-item"><div class="summary-label">Total Harga Awal</div><div class="summary-value" id="summary-harga-awal">Rp 0</div></div>
                         <div class="summary-item"><div class="summary-label">Total Diskon</div><div class="summary-value" id="summary-total-diskon">Rp 0</div><div id="summary-diskon-breakdown" class="summary-breakdown"></div></div>
                         <div class="summary-item"><div class="summary-label">Harga Nett Final</div><div class="summary-value total" id="summary-harga-nett-expanded">Rp 0</div></div>
+                        
                         <div class="summary-item">
-                            <div class="summary-label">Diskon Voucher</div>
-                            <div class="quantity-input">
-                                <input type="number" id="voucher-discount-input" placeholder="0" class="quantity-input" style="width:100%; padding:0.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-                                <div style="padding: 0.5rem; border: 1px solid var(--border-color); border-left: 0; background-color: #eee; border-top-right-radius: 4px; border-bottom-right-radius: 4px; width: 40px; text-align: center; box-sizing: border-box;">
-                                    %
-                                </div>
-                            </div>
-                            </div>
+                            <div class="summary-label">Diskon Voucher (Loyalty 4 Pekan)</div>
+                            <select id="voucher-class-dropdown" class="quantity-input" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 1rem; background-color: white;">
+                                <option value="0">Tanpa Voucher Loyalty</option>
+                                </select>
+                        </div>
                         <div class="summary-item"><div class="summary-label">Pembayaran & Opsi</div>
                             <div><label style="display: block; margin-bottom: 5px;"><input type="checkbox" id="cod-checkbox" checked> COD</label></div>
                             <div><label style="display: block; margin-bottom: 5px;"><input type="checkbox" id="promo-tambahan-5k-checkbox" checked> Terapkan Promo Tambahan 5K</label></div>
@@ -351,8 +349,7 @@
                 const draft = {
                     order: currentOrder,
                     tokoName: tokoName,
-                    voucherDiscount: document.getElementById('voucher-discount-input').value,
-                    // PERUBAHAN JS: Menghapus voucherType
+                    voucherDiscount: document.getElementById('voucher-class-dropdown').value, // <-- PERUBAHAN 5A
                     cod: document.getElementById('cod-checkbox').checked,
                     alokasiDiskon: document.getElementById('voucher-alokasi-checkbox').checked,
                     promoTambahan5k: document.getElementById('promo-tambahan-5k-checkbox').checked,
@@ -494,7 +491,6 @@
             return summary;
         }
 
-        // === PERUBAHAN FUNGSI getCalculations DIMULAI DI SINI ===
         function getCalculations(forceFokusListUpdate = false) {
             let totalHargaAwal = 0, groupTotals = {}, orderLineItems = [];
             for (const productId in currentOrder) {
@@ -564,15 +560,16 @@
             if (document.getElementById('cod-checkbox').checked && totalHargaAwal >= config.discounts.cod.minPurchase) {
                 diskonCodRp = subtotalSetelahPromoSpesial * config.discounts.cod.discount;
             }
-            // --- LOGIKA VOUCHER BARU DIMULAI DI SINI ---
+            
+            // --- PERUBAHAN 4 DIMULAI DI SINI ---
+            const diskonVoucherPersen = (parseFloat(document.getElementById('voucher-class-dropdown').value) || 0); // Misal: 0.035
+            // --- PERUBAHAN 4 SELESAI DI SINI ---
 
-            // 1. Dapatkan pengaturan voucher sekali saja, sebelum loop
-            const diskonVoucherPersen = (parseFloat(document.getElementById('voucher-discount-input').value) || 0) / 100; // Misal: 3.5% -> 0.035
             const isAlokasiAktif = document.getElementById('voucher-alokasi-checkbox').checked;
             const selectedSkus = isAlokasiAktif ? Array.from(document.querySelectorAll('.fokus-checkbox:checked')).map(cb => cb.value) : [];
             
             let totalNettDariItem = 0;
-            let totalDiskonVoucherRp = 0; // Akumulator untuk total diskon voucher
+            let totalDiskonVoucherRp = 0; 
 
             orderLineItems.forEach((line) => {
                 let subtotalItem = line.itemValue;
@@ -595,27 +592,22 @@
                     subtotalItem -= subtotalItem * config.discounts.cod.discount;
                 }
                 
-                // --- LOGIKA VOUCHER BARU DITERAPKAN PER ITEM ---
                 let itemDiskonVoucherRp = 0;
                 if (diskonVoucherPersen > 0) {
                     if (!isAlokasiAktif) {
-                        // Skenario 1: Alokasi TIDAK aktif, terapkan ke SEMUA item
                         itemDiskonVoucherRp = subtotalItem * diskonVoucherPersen;
                     } else if (isAlokasiAktif && selectedSkus.includes(line.id)) {
-                        // Skenario 2: Alokasi AKTIF, terapkan HANYA ke item yang dipilih
                         itemDiskonVoucherRp = subtotalItem * diskonVoucherPersen;
                     }
                 }
                 
-                subtotalItem -= itemDiskonVoucherRp; // Kurangkan diskon voucher dari subtotal item
-                totalDiskonVoucherRp += itemDiskonVoucherRp; // Tambahkan ke total diskon voucher
-                // --- AKHIR LOGIKA VOUCHER BARU ---
+                subtotalItem -= itemDiskonVoucherRp; 
+                totalDiskonVoucherRp += itemDiskonVoucherRp; 
 
                 line.subtotalNett = Math.round(subtotalItem);
                 totalNettDariItem += line.subtotalNett;
             });
 
-            // Total nett adalah jumlah dari semua subtotal nett yang sudah dibulatkan
             const hargaNett = totalNettDariItem;
             const totalDiskon = totalHargaAwal > 0 ? totalHargaAwal - hargaNett : 0;
             
@@ -625,7 +617,6 @@
 
             if (forceFokusListUpdate) updateFokusCheckboxes(orderLineItems);
 
-            // Hitung ulang rincian diskon untuk breakdown
             let diskonGroupingRp = 0, diskonPromo5kRp = 0, diskonDealKhususRp = 0;
             orderLineItems.forEach(line => {
                 const groupingTier = config.discounts.strataGrouping[line.product.group]?.find(t => groupTotals[line.product.group].totalCartons >= t.minQty);
@@ -647,13 +638,12 @@
                         dealKhusus: Math.round(diskonDealKhususRp),
                         promoSpesial: Math.round(diskonPromoSpesialRp),
                         cod: Math.round(diskonCodRp),
-                        voucher: Math.round(totalDiskonVoucherRp), // Gunakan total yang baru dihitung
+                        voucher: Math.round(totalDiskonVoucherRp), 
                     }
                 },
                 orderLineItems, mainValue: totalBruttoMain, simbaValue: totalBruttoSimba, groupTotals
             };
         }
-        // === PERUBAHAN FUNGSI getCalculations SELESAI DI SINI ===
 
         function updateFokusCheckboxes(orderLineItems) {
             const listContainer = document.getElementById('voucher-fokus-list');
@@ -707,7 +697,6 @@
             processStrataUpsell(mainValue, config.discounts.strataPengambilan.main, 'Order');
             processStrataUpsell(simbaValue, config.discounts.strataPengambilan.simba, 'SIMBA');
             
-            // --- AWAL LOGIKA UPSELL LENGKAP ---
             for (const groupName in config.discounts.strataGrouping) {
                 const groupQty = groupTotals[groupName]?.totalCartons || 0;
                 if (groupQty > 0) {
@@ -745,7 +734,6 @@
                     }
                 });
             }
-            // --- AKHIR LOGIKA UPSELL LENGKAP ---
             
             const upsellContainer = document.querySelector('.upsell-outer-container');
             if (upsellMessages.length > 0) { upsellContainer.style.display = 'block'; upsellGrid.innerHTML = upsellMessages.join(''); }
@@ -793,8 +781,7 @@
             const orderToSave = {
                 tokoName, summary, items: itemsToSave, date: new Date().toISOString(),
                 cod: document.getElementById('cod-checkbox').checked,
-                voucherDiscount: parseFloat(document.getElementById('voucher-discount-input').value) || 0,
-                // PERUBAHAN JS: Menghapus voucherType
+                voucherDiscount: parseFloat(document.getElementById('voucher-class-dropdown').value) || 0, // <-- PERUBAHAN 5B
                 alokasiDiskon: document.getElementById('voucher-alokasi-checkbox').checked,
                 promoTambahan5k: document.getElementById('promo-tambahan-5k-checkbox').checked,
                 dealKhususAktif: document.getElementById('deal-khusus-checkbox').checked,
@@ -839,8 +826,7 @@
             document.getElementById('toko-name-input').value = ''; document.getElementById('cod-checkbox').checked = true;
             document.getElementById('voucher-alokasi-checkbox').checked = false; document.getElementById('promo-tambahan-5k-checkbox').checked = false;
             document.getElementById('deal-khusus-checkbox').checked = false; document.getElementById('deal-khusus-input').value = '';
-            document.getElementById('voucher-discount-input').value = ''; 
-            // PERUBAHAN JS: Menghapus voucherType
+            document.getElementById('voucher-class-dropdown').value = '0'; // <-- PERUBAHAN 5C
             document.getElementById('fokus-alokasi-container').style.display = 'none'; document.querySelector('.order-actions button').textContent = "Simpan Order";
             document.getElementById('search-input').value = ''; document.getElementById('clear-search-btn').style.display = 'none';
             localStorage.removeItem(DRAFT_KEY); renderProducts(true);
@@ -852,8 +838,7 @@
             for (const productId in orderToEdit.items) { currentOrder[productId] = { carton: orderToEdit.items[productId].carton, box: orderToEdit.items[productId].box, stockCarton: orderToEdit.items[productId].stockCarton, stockBox: orderToEdit.items[productId].stockBox }; }
             editingOrderId = orderId;
             document.getElementById('toko-name-input').value = orderToEdit.tokoName; document.getElementById('cod-checkbox').checked = orderToEdit.cod;
-            document.getElementById('voucher-discount-input').value = orderToEdit.voucherDiscount || ''; 
-            // PERUBAHAN JS: Menghapus voucherType
+            document.getElementById('voucher-class-dropdown').value = orderToEdit.voucherDiscount || '0'; // <-- PERUBAHAN 5D
             document.getElementById('promo-tambahan-5k-checkbox').checked = orderToEdit.promoTambahan5k || false;
             document.getElementById('deal-khusus-checkbox').checked = orderToEdit.dealKhususAktif || false; document.getElementById('deal-khusus-input').value = orderToEdit.dealKhususNominal || '';
             document.querySelector('.order-actions button').textContent = "Update Order";
@@ -940,6 +925,24 @@
                 tableBody.appendChild(row);
             });
         }
+        
+        function populateVoucherClassDropdown() {
+            const selectEl = document.getElementById('voucher-class-dropdown');
+            if (!selectEl || !config.loyaltyTiers) return;
+
+            // Kosongkan opsi (sisakan yang default)
+            selectEl.innerHTML = '<option value="0">Tanpa Voucher Loyalty</option>'; 
+
+            config.loyaltyTiers.forEach(tier => {
+                const option = document.createElement('option');
+                // Value-nya adalah rate (misal: 0.035)
+                option.value = tier.rates['4']; 
+                // Teksnya adalah nama kelas dan persennya
+                option.text = `${tier.class} (${(tier.rates['4'] * 100).toFixed(3)}%)`;
+                selectEl.appendChild(option);
+            });
+        }
+        
         function calculateLoyalty() {
             const omzetInput = document.getElementById('monthly-omzet-input');
             const weeklySelect = document.getElementById('weekly-achievement-select');
@@ -968,8 +971,7 @@
                     const draft = JSON.parse(savedDraft);
                     currentOrder = draft.order || {};
                     document.getElementById('toko-name-input').value = draft.tokoName || '';
-                    document.getElementById('voucher-discount-input').value = draft.voucherDiscount || '';
-                    // PERUBAHAN JS: Menghapus voucherType
+                    document.getElementById('voucher-class-dropdown').value = draft.voucherDiscount || '0'; // <-- PERUBAHAN 5E
                     document.getElementById('cod-checkbox').checked = draft.cod !== undefined ? draft.cod : true;
                     document.getElementById('promo-tambahan-5k-checkbox').checked = draft.promoTambahan5k || false;
                     document.getElementById('deal-khusus-checkbox').checked = draft.dealKhususAktif || false;
@@ -980,7 +982,10 @@
                     if (draft.fokusAlokasi) sessionStorage.setItem('draft_fokus_alokasi', JSON.stringify(draft.fokusAlokasi));
                 } else { localStorage.removeItem(DRAFT_KEY); }
             }
-            savedOrders = loadSavedOrders(); setViewMode(); renderProducts(true); populateLoyaltyTable();
+            savedOrders = loadSavedOrders(); setViewMode(); renderProducts(true); 
+            populateLoyaltyTable();
+            populateVoucherClassDropdown(); // <-- PERUBAHAN 3
+            
             const draftFokus = sessionStorage.getItem('draft_fokus_alokasi');
             if(draftFokus) {
                 const skusToCheck = JSON.parse(draftFokus);
@@ -993,11 +998,11 @@
                 document.getElementById('fokus-alokasi-container').style.display = alokasiCheckbox.checked ? 'block' : 'none';
                 calculateAll(false); saveDraft();
             });
-            // PERUBAHAN JS: Menghapus 'voucher-type-select' dari array
-            const mainInputs = ['toko-name-input', 'voucher-discount-input', 'cod-checkbox', 'promo-tambahan-5k-checkbox', 'deal-khusus-input', 'deal-khusus-checkbox'];
+            
+            const mainInputs = ['toko-name-input', 'voucher-class-dropdown', 'cod-checkbox', 'promo-tambahan-5k-checkbox', 'deal-khusus-input', 'deal-khusus-checkbox'];
             mainInputs.forEach(id => {
                 const element = document.getElementById(id);
-                const eventType = element.type === 'checkbox' ? 'change' : 'input';
+                const eventType = (element.type === 'checkbox' || element.tagName.toLowerCase() === 'select') ? 'change' : 'input';
                 element.addEventListener(eventType, () => { calculateAll(false); saveDraft(); });
             });
             const omzetInput = document.getElementById('monthly-omzet-input');
@@ -1016,4 +1021,3 @@
     </script>
 </body>
 </html>
-
